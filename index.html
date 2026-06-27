@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlakTon — Ödüllü Tasarım & Sinematik Akustik Sistem</title>
+    <style>
+        :root {
+            --bg-base: #010103;
+            --glass-bg: rgba(20, 20, 25, 0.35);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-glow: rgba(255, 255, 255, 0.05);
+            
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1a6;
+            --text-muted: #6e6e73;
+            
+            /* High-Intensity Vibrant Neon Palette */
+            --neon-cyan: #00f3ff;
+            --neon-pink: #ff007f;
+            --neon-purple: #a832ff;
+            --neon-orange: #ff8c00;
+            
+            --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-stack);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Tam Ekran Nefes Alan RGB Aurora Arka Plan */
+        .global-aurora {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(-45deg, rgba(0, 243, 255, 0.15), rgba(255, 0, 127, 0.15), rgba(168, 50, 255, 0.15), rgba(0, 243, 255, 0.15));
+            background-size: 400% 400%;
+            animation: auroraBreathing 20s ease infinite;
+            z-index: -3;
+        }
+
+        @keyframes auroraBreathing {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Yüzen Neon Küreler (Derinlik Katmak İçin) */
+        .neon-blur-container {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -2; pointer-events: none; overflow: hidden;
+        }
+        .neon-orb {
+            position: absolute; border-radius: 50%; filter: blur(130px);
+            opacity: 0.3; mix-blend-mode: screen;
+            animation: floatOrb 20s infinite alternate ease-in-out;
+        }
+        .orb-1 { width: 50vw; height: 50vw; background: radial-gradient(circle, var(--neon-cyan) 0%, transparent 80%); top: -10%; right: -10%; }
+        .orb-2 { width: 60vw; height: 60vw; background: radial-gradient(circle, var(--neon-pink) 0%, transparent 80%); bottom: -20%; left: -10%; }
+
+        @keyframes floatOrb {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(50px) scale(1.1); }
+        }
+
+        /* Scroll (Kaydırma) Animasyon Sınıfları */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px) scale(0.98);
+            transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+
+        /* Premium Glassmorphism Navigation */
+        nav {
+            position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 1100px; height: 54px;
+            background: rgba(10, 10, 15, 0.4); border: 1px solid var(--glass-border);
+            backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            border-radius: 27px; z-index: 1000; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; height: 100%; padding: 0 24px; }
+        .logo { font-weight: 800; font-size: 20px; letter-spacing: -0.5px; background: linear-gradient(90deg, #fff, var(--neon-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 13px; font-weight: 500; margin-left: 20px; transition: all 0.3s; }
+        .btn-nav-cta { background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); color: #000 !important; padding: 8px 18px; border-radius: 20px; font-weight: 600 !important; }
+        @media (max-width: 600px) { .nav-links a:not(.btn-nav-cta) { display: none; } }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh; width: 100%; max-width: 1200px; margin: 0 auto;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 120px 24px 60px 24px;
+        }
+        .badge-premium { display: inline-flex; align-items: center; gap: 8px; background: rgba(29, 185, 84, 0.15); color: #1DB954; padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(29, 185, 84, 0.4); margin-bottom: 20px; box-shadow: 0 0 20px rgba(29, 185, 84, 0.3); backdrop-filter: blur(10px); }
+        .hero h1 { font-size: clamp(32px, 7vw, 64px); font-weight: 800; letter-spacing: -2px; line-height: 1.15; margin-bottom: 24px; background: linear-gradient(180deg, #ffffff 40%, rgba(255,255,255,0.5) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .hero h1 span { background: linear-gradient(90deg, var(--neon-cyan) 0%, var(--neon-pink) 50%, var(--neon-purple) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: clamp(16px, 2.5vw, 21px); color: var(--text-secondary); max-width: 760px; margin-bottom: 40px; line-height: 1.5; text-shadow: 0 4px 10px rgba(0,0,0,0.8); }
+
+        /* Cinematic Hardware Showcase */
+        .centerpiece-container { margin-top: 40px; width: 100%; max-width: 360px; position: relative; }
+        .hardware-frame {
+            width: 100%; aspect-ratio: 1 / 1;
+            background: linear-gradient(135deg, rgba(30, 30, 40, 0.5), rgba(10, 10, 15, 0.7));
+            border: 1px solid var(--glass-border); border-radius: 36px;
+            display: flex; justify-content: center; align-items: center; position: relative;
+            backdrop-filter: blur(25px); box-shadow: inset 0 0 30px var(--glass-glow), 0 30px 60px rgba(0,0,0,0.8);
+        }
+        .neon-blast-ring { position: absolute; width: 78%; height: 78%; border-radius: 50%; border: 2px solid var(--neon-cyan); opacity: 0; pointer-events: none; z-index: 2; animation: neonExplosion 0.6s ease-out 1.2s forwards; }
+        @keyframes neonExplosion { 0% { transform: scale(0.9); opacity: 1; border-color: var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan); } 50% { border-color: var(--neon-pink); box-shadow: 0 0 30px var(--neon-pink); } 100% { transform: scale(1.4); opacity: 0; filter: blur(5px); } }
+        .hardware-frame::before { content: ''; position: absolute; width: 80%; height: 80%; background: radial-gradient(circle, rgba(0, 243, 255, 0.4) 0%, transparent 70%); z-index: -1; opacity: 0; animation: pullAuraAfterSnap 4s infinite alternate ease-in-out 1.5s forwards; }
+        @keyframes pullAuraAfterSnap { 0% { opacity: 0.3; transform: scale(0.95); } 100% { opacity: 0.8; transform: scale(1.1); } }
+        .cinematic-vinyl { width: 78%; height: 78%; background: radial-gradient(circle, #000 25%, #18181f 26%, #050508 35%, #111116 55%, #020204 100%); border-radius: 50%; border: 2px solid rgba(255,255,255,0.05); box-shadow: inset 0 0 10px rgba(255,255,255,0.1), 0 10px 30px rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; position: relative; opacity: 0; animation: slideAndSnap 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.15) forwards, continuousRotation 10s linear 1.2s infinite; }
+        @keyframes slideAndSnap { 0% { transform: translateY(-200px) scale(0.7) rotate(-60deg); opacity: 0; filter: blur(5px); } 85% { transform: translateY(5px) scale(1.02) rotate(2deg); opacity: 1; filter: blur(0); } 100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; } }
+        @keyframes continuousRotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .vinyl-master-label { width: 38%; height: 38%; border-radius: 50%; background: radial-gradient(circle at center, var(--neon-pink), var(--neon-purple)); box-shadow: 0 0 20px rgba(255, 0, 127, 0.5); display: flex; justify-content: center; align-items: center; color: #fff; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* Experiential Feature Strip (Cam Yüzey Etkisi Artırıldı) */
+        .experience-strip {
+            background: var(--glass-bg);
+            border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            padding: 80px 24px; text-align: center; position: relative;
+            box-shadow: inset 0 0 40px rgba(255,255,255,0.02);
+        }
+        .section-tag { font-size: 13px; font-weight: 700; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 2.5px; margin-bottom: 16px; display: block; text-shadow: 0 0 10px rgba(0,243,255,0.5); }
+        .section-title { font-size: clamp(26px, 5vw, 42px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 20px; }
+        .section-subtitle { font-size: clamp(15px, 2vw, 18px); color: var(--text-secondary); max-width: 680px; margin: 0 auto 40px auto; line-height: 1.6; }
+
+        /* Marketing Grid / Glass Cards */
+        .grid-section { max-width: 1140px; margin: 0 auto; padding: 80px 24px; }
+        .glass-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+        
+        .glass-card {
+            background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 24px; padding: 40px 30px;
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1);
+        }
+        .glass-card:hover { transform: translateY(-10px) scale(1.02); background: rgba(30, 30, 40, 0.5); box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.2), 0 0 20px rgba(0,243,255,0.2); }
+
+        /* Vinyl Showcase Grid with Breathing RGB Backgrounds */
+        .showcase-section { max-width: 1140px; margin: 0 auto; padding: 40px 24px 100px 24px; }
+        .vinyl-display-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-top: 40px; }
+        
+        @keyframes rgbBreathing {
+            0% { box-shadow: 0 0 20px rgba(0, 243, 255, 0.2), inset 0 0 20px rgba(0, 243, 255, 0.05); border-color: rgba(0, 243, 255, 0.3); }
+            33% { box-shadow: 0 0 30px rgba(255, 0, 127, 0.25), inset 0 0 20px rgba(255, 0, 127, 0.05); border-color: rgba(255, 0, 127, 0.3); }
+            66% { box-shadow: 0 0 25px rgba(168, 50, 255, 0.2), inset 0 0 20px rgba(168, 50, 255, 0.05); border-color: rgba(168, 50, 255, 0.3); }
+            100% { box-shadow: 0 0 20px rgba(0, 243, 255, 0.2), inset 0 0 20px rgba(0, 243, 255, 0.05); border-color: rgba(0, 243, 255, 0.3); }
+        }
+
+        .vinyl-card-item { 
+            background: var(--glass-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 32px 20px; text-align: center; transition: all 0.4s ease;
+            animation: rgbBreathing 8s infinite alternate ease-in-out;
+        }
+        .vinyl-card-item:hover { transform: translateY(-5px); }
+        .thumb-disc { width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 20px auto; background: radial-gradient(circle, #08080a 25%, #1c1c24 50%, #000 100%); border: 2px solid #2d2d35; display: flex; justify-content: center; align-items: center; animation: continuousRotation 8s linear infinite; }
+        .vinyl-card-item:hover .thumb-disc { animation-duration: 2.5s; box-shadow: 0 0 35px var(--neon-cyan); }
+        .thumb-label { width: 58px; height: 58px; border-radius: 50%; font-size: 8px; font-weight: 800; color: #fff; display: flex; justify-content: center; align-items: center; text-transform: uppercase; text-align: center; }
+        .lbl-90s { background: radial-gradient(circle, #ff007f, #7900ff); }
+        .lbl-tarkan { background: radial-gradient(circle, #00f3ff, #0044ff); }
+        .lbl-wedding { background: radial-gradient(circle, #ff9a9e, #fecfef); color: #111; }
+        .lbl-retro { background: radial-gradient(circle, #39ff14, #004d00); }
+
+        /* Final CTA */
+        .cta-closure { 
+            max-width: 960px; margin: 40px auto 120px auto; padding: 80px 32px; 
+            background: rgba(20, 20, 25, 0.4); border: 1px solid rgba(255,255,255,0.15); border-radius: 36px; 
+            backdrop-filter: blur(40px); box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.2); 
+            text-align: center; width: 92%; position: relative; overflow: hidden;
+        }
+        .btn-final-cta { background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink)); color: #000; padding: 16px 42px; border-radius: 30px; font-size: 16px; font-weight: 700; text-decoration: none; display: inline-block; box-shadow: 0 0 30px rgba(0, 243, 255, 0.5); transition: transform 0.3s, box-shadow 0.3s; }
+        .btn-final-cta:hover { transform: scale(1.05); box-shadow: 0 0 45px rgba(255, 0, 127, 0.6); }
+
+        footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 40px 24px; text-align: center; font-size: 13px; color: var(--text-muted); background: #010102; position: relative; z-index: 10; }
+        .legal-disclaimer { max-width: 800px; margin: 0 auto 20px auto; font-size: 11px; color: #555; text-align: justify; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <div class="global-aurora"></div>
+    <div class="neon-blur-container">
+        <div class="neon-orb orb-1"></div>
+        <div class="neon-orb orb-2"></div>
+    </div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">PlakTon</div>
+            <div class="nav-links">
+                <a href="#neden-almalisiniz">Neden PlakTon?</a>
+                <a href="#mimari">Teknoloji</a>
+                <a href="#koleksiyon">Plaklar</a>
+                <a href="#on-siparis" class="btn-nav-cta">Ön Sipariş</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero reveal active">
+        <div class="badge-premium reveal delay-1">Yalnızca Spotify Premium İle Çalışır</div>
+        <span class="section-tag reveal delay-2">Spatial Interface Design</span>
+        <h1 class="reveal delay-2">Müziği Sadece Dinlemeyin.<br><span>Ona Yeniden Dokunun.</span></h1>
+        <p class="reveal delay-3">Ekranlardan ve butonlardan tamamen arındırılmış, pürüzsüz bir müzik deneyimi. Dijital dünyanın uçsuz bucaksız kütüphanesini, analog dönemin sıcak ve asil hissiyatıyla birleştirdik. Favori Spotify listeleriniz artık elinizle tutabileceğiniz sanat eserleri.</p>
+        
+        <a href="#on-siparis" class="btn-final-cta reveal delay-3">Keşfedin & Ön Sipariş Verin</a>
+
+        <div class="centerpiece-container reveal delay-3">
+            <div class="hardware-frame">
+                <div class="neon-blast-ring"></div>
+                <div class="cinematic-vinyl">
+                    <div class="vinyl-master-label">PlakTon Pro</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="experience-strip reveal">
+        <span class="section-tag reveal delay-1">Fiziksel Sihir & Ekran Detoksu</span>
+        <h2 class="section-title reveal delay-1">Plağı Yerleştirdiğiniz An, Müzik Başlar.</h2>
+        <p class="section-subtitle reveal delay-2">Telefonu elinize alıp bildirimlerde kaybolmayın. Hiçbir ekranı olmayan bu cihazda müziği başlatmak için tek yapmanız gereken, o anki modunuza uygun plağı seçip yuvasına bırakmak. Kusursuz senkronizasyonla şarkınız odanızı doldurur.</p>
+    </section>
+
+    <section id="neden-almalisiniz" class="grid-section">
+        <div style="text-align: center; margin-bottom: 50px;">
+            <span class="section-tag reveal">Deneyim Odaklı</span>
+            <h2 class="section-title reveal">Düğmeler Yok, Sadece Kusursuz Dokunuş</h2>
+        </div>
+        <div class="glass-grid">
+            <div class="glass-card reveal delay-1">
+                <h3>🪄 Görünmez Dokunmatik Kontrol</h3>
+                <p style="margin-top:10px; color:var(--text-secondary);">Cihazın üzerinde tek bir fiziksel buton bile bulunmaz. Ses seviyesini ayarlamak için kasanın pürüzsüz yan yüzeylerine dokunmanız veya hafifçe okşamanız yeterlidir. Kapasitif dokunmatik sensörler her hareketinizi hisseder.</p>
+            </div>
+            <div class="glass-card reveal delay-2">
+                <h3>🔋 Aylarca Süren Akıllı Derin Uyku</h3>
+                <p style="margin-top:10px; color:var(--text-secondary);">Plağı yuvadan çıkardığınız an cihaz kendini tamamen kapatarak mekanik derin uyku moduna geçer. Kablosuz kullanımda şarja takılı olmasa dahi, aylar boyunca pilini harcamadan yeni bir plağın takılmasını bekler.</p>
+            </div>
+            <div class="glass-card reveal delay-3">
+                <h3>🌈 Nefes Alan RGB Işık Dili</h3>
+                <p style="margin-top:10px; color:var(--text-secondary);">Hiçbir ekranı olmayan PlakTon sizinle renklerle iletişim kurar. Kurulumda yavaşça yanıp sönen beyaz, diski okurken sıcak bir günışığı, müzik çalarken odanıza yayılan pastel mavi ambiyans aydınlatması ile ruh halinize uyum sağlar.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="mimari" class="experience-strip reveal" style="background: rgba(4, 4, 6, 0.65);">
+        <span class="section-tag reveal delay-1">Mühendislik Harikası</span>
+        <h2 class="section-title reveal delay-1">Kusursuz Bağlantı Teknolojisi</h2>
+        <p class="section-subtitle reveal delay-2">PlakTon'un kalbinde, endüstriyel kararlılığa sahip akıllı işlemci (ESP32-S3) yer alır. Plağı yuvaya yerleştirdiğiniz saniye cihaz uyanır, NFC verisini kodlar ve Wi-Fi üzerinden Spotify sunucularıyla doğrudan eşleşerek müziği sıfır gecikmeyle başlatır.</p>
+    </section>
+
+    <section id="koleksiyon" class="showcase-section">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <span class="section-tag reveal">Kişiye Özel Tasarım</span>
+            <h2 class="section-title reveal">Size Özel Basılan Akıllı Plaklar</h2>
+            <p class="reveal delay-1" style="color: var(--text-muted); font-size: 14px; margin-top: 10px;">Arka plandaki yumuşak RGB geçişleri, cihazın ambiyans aydınlatmasını yansıtır.</p>
+        </div>
+        <div class="vinyl-display-grid">
+            <div class="vinyl-card-item reveal delay-1"><div class="thumb-disc"><div class="thumb-label lbl-90s">90'lar Pop</div></div><h4>90'lar Pop Kulübü</h4></div>
+            <div class="vinyl-card-item reveal delay-2"><div class="thumb-disc"><div class="thumb-label lbl-tarkan">Tarkan</div></div><h4>Tarkan Klasikleri</h4></div>
+            <div class="vinyl-card-item reveal delay-3"><div class="thumb-disc"><div class="thumb-label lbl-wedding">Düğün</div></div><h4>En Özel Günümüz</h4></div>
+            <div class="vinyl-card-item reveal delay-1"><div class="thumb-disc"><div class="thumb-label lbl-retro">Synth Oyun</div></div><h4>Retro Oyun Dünyası</h4></div>
+        </div>
+    </section>
+
+    <section id="on-siparis" style="padding: 0 24px;">
+        <div class="cta-closure reveal">
+            <h2 class="reveal delay-1">Müziğin Geleceğinde Yerinizi Ayırın.</h2>
+            <p class="reveal delay-2">PlakTon ana ünitesi ve tamamen size özel tasarlanıp basılacak ilk 4 adet NFC akıllı plağınız, lansmana özel avantajlı fiyatlarla sınırlı sayıda ön siparişte.</p>
+            <a href="#" class="btn-final-cta reveal delay-3">Ön Sipariş Formunu Doldur</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="legal-disclaimer">
+            <strong>Yasal Uyarı:</strong> PlakTon, herkese açık Spotify® Web API altyapısını kullanan bağımsız bir donanım projesidir ve Spotify AB ile hiçbir resmi bağı, sponsorluğu veya ortaklığı bulunmamaktadır. "Spotify", Spotify AB'nin tescilli ticari markasıdır. Cihazın müzik akışı özelliklerini kullanabilmek için kullanıcının aktif ve geçerli bir <strong>Spotify Premium</strong> aboneliğine sahip olması zorunludur.
+        </div>
+        <p>Create by Tonoz &copy; 2026. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const revealElements = document.querySelectorAll(".reveal");
+
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("active");
+                        observer.unobserve(entry.target); // Animasyon sadece bir kere çalışsın
+                    }
+                });
+            }, {
+                root: null,
+                threshold: 0.15, // Elemanın %15'i göründüğünde tetikle
+                rootMargin: "0px 0px -50px 0px"
+            });
+
+            revealElements.forEach(el => {
+                revealObserver.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
